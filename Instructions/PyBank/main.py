@@ -13,6 +13,8 @@ greatestincrease=0
 greatestincmonth=[]
 greatestdecrease=0
 greatestdecmonth=[]
+changetotal1=0
+changecount1=0
 
 
 with open(infile) as inputpydata:
@@ -27,19 +29,19 @@ with open(infile) as inputpydata:
         current_net=int(row[1])
         if previous_net !=0:
             change=current_net-previous_net
-            changecount=changecount+1
-            changetotal=changetotal+change
+            changecount1=changecount1+1
+            changetotal1=changetotal1+change
 
         previous_net=current_net 
 
 
         currentinc=int(row[1])
-        greatestincmonth=str(row[1])
         if change>greatestincrease:  
-            greatestincrease=change+currentinc
+            greatestincrease=change
             changecount=changecount+1
             changetotal=changetotal+change 
-            
+            if greatestincrease==change:
+                greatestincmonth=str(row[0])
             
 
             
@@ -47,14 +49,25 @@ with open(infile) as inputpydata:
  
 
         currentdec=int(row[1])
-        greatestdecmonth=str(row[1])
         if change<greatestdecrease:
-            greatestdecrease=change-currentdec
+            greatestdecrease=change
             changecount=changecount+1
             changetotal=changetotal-change    
+            if greatestdecrease==change:
+                greatestdecmonth=str(row[0])
+
+        previousdec=greatestdecrease
 
 
-print()
+
+
+                
+
+
+
+
+
+print(changetotal1)
          
     
 output=f"""
@@ -62,9 +75,9 @@ Financial Analysis
 ----------------------------
 Total Months: {totalmonth}
 Total: ${totalamount}
-Average Change: ${changetotal/changecount:.2f}
-Greatest Increase in Profits: Aug-16 ${greatestincrease}
-Greatest Decrease in Profits: Feb-14 ${greatestdecrease}
+Average Change: ${changetotal1/changecount1:.2f}
+Greatest Increase in Profits: {greatestincmonth} ${greatestincrease}
+Greatest Decrease in Profits: {greatestdecmonth} ${greatestdecrease}
 """
 
 print(output)
