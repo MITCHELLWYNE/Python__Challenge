@@ -1,75 +1,74 @@
 import csv
+import os
 
 infile="resources/election_data.csv"
 
 #name all variables
+total_votes = 0
+candidate_options = []
+candidate_votes = {}
+winning_candidate = ""
+winning_count = 0
+winning_percentage = 0
 
-votes=0
-votes_next=0
-votes_after=0
-previous_vote=0
-ballot_count=0
-candidate=str
-next_candidate=str
-after_candidate=str
-previous_candidate=str
-change_vote=0
-county=str
-previous_county=str
-current_county=str
+
 
 with open(infile) as inputpydata:
     rows=csv.reader(inputpydata)
     header=next(rows)
 
-
-
-#for loop for how many votes were counted
     for row in rows:
-        ballot_count=ballot_count+1
+
         
 
+        # Add to the total vote count
+        total_votes = total_votes + 1
 
- #for loop for each county
- # count how many times each candidate appears in the data set
- # run for loop to find each candidate   
+        # Get the candidate name and county name from rows.
+        candidate_name = row[2]
+
     
-    #ballots (row[0])  
-    #county (row[1])
-    #candidate(row[2])
-        current_county=str(row[1])
-        if previous_county!=current_county:
-                    
-        
 
-            
-#send to the top of if statement
-        
-        
-        
+        if candidate_name not in candidate_options:
+
+            # Add the candidate name to the candidate list.
+            candidate_options.append(candidate_name)
+
+            # And begin tracking that candidate's voter count.
+            candidate_votes[candidate_name] = 0
+
+        # Add a vote to that candidate's count
+        candidate_votes[candidate_name] += 1
 
 
+    for candidate_name in candidate_votes:
 
-    print(votes) 
-        
-
-        
-
-
-
+        # Retrieve vote count and percentage
+        votes = candidate_votes.get(candidate_name)
+        vote_percentage = float(votes) / float(total_votes) * 100
+        candidate_results = (
+            f"{candidate_name}: {vote_percentage:.1f}% ({votes:,})\n")
 
 
+ # whats the winning vote count, winning percentage, and candidate.
+        if (votes > winning_count) and (vote_percentage > winning_percentage):
+            winning_count = votes
+            winning_candidate = candidate_name
+            winning_percentage = vote_percentage
+
+
+
+
+print(winning_count)
 
 output=f"""
 Election Results
 -------------------------
-Total Votes: {ballot_count}
+Total Votes: {total_votes}
 -------------------------
-Charles Casper Stockham: 23.049% (85213)
-Diana DeGette: 73.812% (272892)
-Raymon Anthony Doane: 3.139% (11606)
+{candidate_results}
 -------------------------
-Winner: Diana DeGette
+Winner: {winning_candidate}
 """
 
 print(output)
